@@ -1,20 +1,19 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 
-export default function QRNGTab() {
-  const [bits, setBits] = useState([]);
+export default function QRNGTab({ qrngBits = [], setQrngBits }) {
   const timerRef = useRef(null);
 
   const sampleBit = () => (Math.random() < 0.5 ? 0 : 1);
 
   const handleGen32Bits = () => {
     if (timerRef.current) clearInterval(timerRef.current);
-    setBits([]);
+    if (setQrngBits) setQrngBits([]);
     let count = 0;
     const tempBits = [];
 
     timerRef.current = setInterval(() => {
       tempBits.push(sampleBit());
-      setBits([...tempBits]);
+      if (setQrngBits) setQrngBits([...tempBits]);
       count++;
       if (count === 32) {
         clearInterval(timerRef.current);
@@ -25,16 +24,18 @@ export default function QRNGTab() {
 
   const handleClockSingleBit = () => {
     if (timerRef.current) clearInterval(timerRef.current);
-    setBits((prev) => {
-      const current = prev.length >= 32 ? [] : [...prev];
-      return [...current, sampleBit()];
-    });
+    if (setQrngBits) {
+      setQrngBits((prev) => {
+        const current = prev.length >= 32 ? [] : [...prev];
+        return [...current, sampleBit()];
+      });
+    }
   };
 
   const handleClear = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = null;
-    setBits([]);
+    if (setQrngBits) setQrngBits([]);
   };
 
   useEffect(() => {
@@ -43,10 +44,12 @@ export default function QRNGTab() {
     };
   }, []);
 
+  const bits = qrngBits;
+
   // Compute hex digest & OTP when bits >= 32
   let hexDigest = '—';
   let otpKey = '------';
-  let ostText = 'Sample 32 bits to assemble an unconditional security pad.';
+  let ostText = 'Sample 32 bits from optical beam-splitter detection events to assemble an unconditional security pad.';
 
   if (bits.length >= 32) {
     let hex = '';
@@ -56,7 +59,7 @@ export default function QRNGTab() {
     }
     hexDigest = '0x' + hex;
     otpKey = hex.substring(0, 6);
-    ostText = 'Information-theoretically secure session key derived from true quantum projection.';
+    ostText = 'Information-theoretically secure session key derived from true quantum spatial projection.';
   }
 
   return (
@@ -64,7 +67,7 @@ export default function QRNGTab() {
       <div className="card">
         <h2>Quantum Random Number Generator (QRNG) & One-Time Pad</h2>
         <p className="muted">
-          Using the pure quantum indeterminacy of beam-splitter path detection, we record true random bits <span className="math"><i>b</i> ∈ &#123;0, 1&#125;</span> to generate an information-theoretically secure session key.
+          Using the pure quantum indeterminacy of 50:50 square beam-splitter path detection, we record true random bits <span className="math"><i>b</i> ∈ &#123;0, 1&#125;</span> to generate an information-theoretically secure session key. <b>Bits measured in the Beam Splitter optical bench directly accumulate in this entropy pool!</b>
         </p>
         <div className="controls">
           <button className="btn primary" onClick={handleGen32Bits}>
@@ -88,7 +91,7 @@ export default function QRNGTab() {
                 </div>
               ))
             ) : (
-              <span className="muted">Click acquire to sample hardware entropy.</span>
+              <span className="muted">Click acquire or trigger Beam Splitter detectors to sample quantum entropy.</span>
             )}
           </div>
 

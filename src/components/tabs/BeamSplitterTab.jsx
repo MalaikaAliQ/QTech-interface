@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function BeamSplitterTab() {
+export default function BeamSplitterTab({ qrngBits = [], onBitGenerated, onNavigateToBits }) {
   const [photonFired, setPhotonFired] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [outcome, setOutcome] = useState(null); // 0 or 1
@@ -16,6 +16,11 @@ export default function BeamSplitterTab() {
     const result = Math.random() < 0.5 ? 0 : 1;
     setOutcome(result);
     setCollapsed(true);
+
+    // Feed generated quantum bit directly into QRNG OTP entropy pool
+    if (onBitGenerated) {
+      onBitGenerated(result);
+    }
   };
 
   const handleReset = () => {
@@ -89,7 +94,7 @@ export default function BeamSplitterTab() {
       <div className="card">
         <h2>Spatial Qubit: 50:50 Beam Splitter & Circuit Representation</h2>
         <p className="muted">
-          An attenuated single-photon source outputs mode <span className="math">|0⟩</span>. The 50:50 beam splitter implements a Hadamard unitary transform <span className="math"><b>H</b></span>, creating an equal spatial superposition. Single-Photon Avalanche Detectors (SPADs) then force a projective measurement.
+          An attenuated single-photon source outputs mode <span className="math">|0⟩</span>. The 50:50 square beam splitter cube implements a Hadamard unitary transform <span className="math"><b>H</b></span>, creating an equal spatial superposition. Single-Photon Avalanche Detectors (SPADs) force a projective measurement, feeding bits directly into the <b>QRNG One-Time Pad (OTP) key generator</b>.
         </p>
         <div className="controls">
           <button className="btn primary" onClick={handleEmitPhoton}>
@@ -101,10 +106,25 @@ export default function BeamSplitterTab() {
             disabled={!photonFired || collapsed}
             style={{ opacity: !photonFired || collapsed ? 0.6 : 1 }}
           >
-            2. Trigger Detectors (Collapse)
+            2. Trigger Detectors (Collapse & Push Bit to QRNG)
           </button>
-          <button className="btn warn" onClick={handleReset}>Reset</button>
+          <button className="btn warn" onClick={handleReset}>Reset Bench</button>
+          {onNavigateToBits && (
+            <button
+              className="btn"
+              onClick={onNavigateToBits}
+              style={{ marginLeft: 'auto', background: '#f5f3ff', borderColor: '#c4b5fd', color: 'var(--purple)' }}
+            >
+              View QRNG & OTP Key ({qrngBits.length}/32 bits) →
+            </button>
+          )}
         </div>
+
+        {collapsed && outcome !== null && (
+          <div className="note" style={{ marginTop: '10px', background: '#f0fdf4', borderColor: '#4ade80', color: '#166534' }}>
+            <b>✓ QRNG Entropy Registered:</b> Single photon measurement yielded bit <b>{outcome}</b>, automatically recorded into the QRNG registry ({qrngBits.length}/32 bits acquired for OTP generation).
+          </div>
+        )}
       </div>
 
       <div className="grid two" style={{ marginTop: '16px' }}>
@@ -115,10 +135,17 @@ export default function BeamSplitterTab() {
             <rect x="10" y="10" width="580" height="300" rx="12" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1.5" />
             <line x1="50" y1="160" x2="280" y2="160" stroke="#cbd5e1" strokeWidth="3" strokeDasharray="4,4" />
 
-            {/* Beam Splitter */}
-            <rect x="272" y="115" width="16" height="90" transform="rotate(45 280 160)" fill="#bae6fd" stroke="#0284c7" strokeWidth="2" />
-            <text x="280" y="240" textAnchor="middle" fontSize="11" fill="#64748b" fontWeight="600">
-              50:50 Beam Splitter (BS)
+            {/* Square 50:50 Beam Splitter Cube */}
+            <g transform="translate(250, 130)">
+              {/* Outer Square Cube Body */}
+              <rect x="0" y="0" width="60" height="60" rx="6" fill="#bae6fd" stroke="#0284c7" strokeWidth="2.5" />
+              {/* Internal Semi-Reflective Beam Splitting Coating Interface */}
+              <line x1="0" y1="60" x2="60" y2="0" stroke="#0369a1" strokeWidth="2" strokeDasharray="3,2" />
+              {/* Corner Glare Highlights for glass cube appearance */}
+              <path d="M 6 6 L 18 6 L 6 18 Z" fill="rgba(255,255,255,0.6)" />
+            </g>
+            <text x="280" y="225" textAnchor="middle" fontSize="11" fill="#64748b" fontWeight="700">
+              50:50 Beam Splitter Cube (BS)
             </text>
 
             {/* Paths to D0 and D1 */}

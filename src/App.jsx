@@ -11,6 +11,11 @@ import StreamsTab from './components/tabs/StreamsTab';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
+  const [qrngBits, setQrngBits] = useState([]);
+
+  const handleBitGenerated = (bit) => {
+    setQrngBits((prev) => (prev.length >= 32 ? [bit] : [...prev, bit]));
+  };
 
   return (
     <div className="wrap">
@@ -21,9 +26,17 @@ export default function App() {
         {activeTab === 'nature' && <NatureVRTab />}
         {activeTab === 'search' && <SearchPuzzleTab />}
         {activeTab === 'oracle' && <OracleTab />}
-        {activeTab === 'measure' && <BeamSplitterTab />}
+        {activeTab === 'measure' && (
+          <BeamSplitterTab
+            qrngBits={qrngBits}
+            onBitGenerated={handleBitGenerated}
+            onNavigateToBits={() => setActiveTab('bits')}
+          />
+        )}
         {activeTab === 'collapse' && <WavefunctionTab />}
-        {activeTab === 'bits' && <QRNGTab />}
+        {activeTab === 'bits' && (
+          <QRNGTab qrngBits={qrngBits} setQrngBits={setQrngBits} />
+        )}
         {activeTab === 'streams' && <StreamsTab />}
       </main>
     </div>
