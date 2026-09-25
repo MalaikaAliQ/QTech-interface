@@ -13,6 +13,7 @@ export default function SearchPuzzleTab() {
   // Quantum Search State
   const [quantumAmplitudes, setQuantumAmplitudes] = useState(() => Array(16).fill(0.25));
   const [quantumSteps, setQuantumSteps] = useState('0');
+  const [quantumTime, setQuantumTime] = useState('0.00');
   const [quantumStatus, setQuantumStatus] = useState('Initialized: uniform state |ψ⟩ = 1/4 Σ |x⟩.');
   const [quantumHit, setQuantumHit] = useState(false);
   const quantumTimeoutsRef = useRef([]);
@@ -32,6 +33,7 @@ export default function SearchPuzzleTab() {
 
     setQuantumAmplitudes(Array(16).fill(0.25));
     setQuantumSteps('0');
+    setQuantumTime('0.00');
     setQuantumStatus('Initialized: uniform state |ψ⟩ = 1/4 Σ |x⟩.');
     setQuantumHit(false);
 
@@ -77,18 +79,21 @@ export default function SearchPuzzleTab() {
 
     const t1 = setTimeout(() => {
       setQuantumSteps('1 (Oracle)');
+      setQuantumTime('0.15');
       setQuantumAmplitudes(marked);
       setQuantumStatus('Oracle applied: negative phase on |target⟩. Probabilities remain 6.25%.');
     }, 600);
 
     const t2 = setTimeout(() => {
       setQuantumSteps('1 (Diffusion)');
+      setQuantumTime('0.30');
       setQuantumAmplitudes(diff);
       setQuantumStatus('Diffusion complete: constructive interference elevates marked state.');
     }, 1300);
 
     const t3 = setTimeout(() => {
       setQuantumSteps('2 (Final Amplification)');
+      setQuantumTime('0.50');
       setQuantumAmplitudes(finalAmps);
       setQuantumHit(true);
       setQuantumStatus('Target state probability reaches ~90%. Ready for single measurement.');
@@ -186,10 +191,14 @@ export default function SearchPuzzleTab() {
               );
             })}
           </div>
-          <div className="grid two" style={{ marginTop: '14px' }}>
+          <div className="grid three" style={{ marginTop: '14px' }}>
             <div className="stat">
               <div className="label">Grover Iterations</div>
               <div className="value">{quantumSteps}</div>
+            </div>
+            <div className="stat">
+              <div className="label">Time (Illustrative)</div>
+              <div className="value">{quantumTime} s</div>
             </div>
             <div className="stat">
               <div className="label">Target Probability |α|²</div>
