@@ -6,7 +6,7 @@ const streamData = {
     desc: 'Applies coherent state vectors and unitary gate operations to achieve asymptotic speedups. The Beam Splitter serves as the foundational single-qubit Hadamard gate (H), while Grover search exemplifies quantum amplitude amplification.',
     lab: 'Search & Grover Tabs',
     hw: 'Superconducting Qubits / Trapped Ions',
-    cross: 'Simulation & Quantum Networks',
+    cross: 'Simulation & Optics/Photonics',
     color: 'var(--blue)'
   },
   comm: {
@@ -14,7 +14,7 @@ const streamData = {
     desc: 'Exploits the no-cloning theorem and projective measurement collapse. By preparing spatial or polarization qubits with beam splitters and recording photon detector clicks, Alice and Bob exchange information-theoretically secure keys (QKD) and true random seeds (QRNG).',
     lab: 'Beam Splitter & QRNG Tabs',
     hw: 'Single-Photon Detectors / Fiber Optics',
-    cross: 'Quantum Networks & Sensing',
+    cross: 'Optics & Sensing',
     color: 'var(--green)'
   },
   sense: {
@@ -33,12 +33,12 @@ const streamData = {
     cross: 'Computing & Materials Engineering',
     color: 'var(--purple)'
   },
-  net: {
-    title: 'Stream 5: Quantum Networks & Distributed Systems',
-    desc: 'Interlinks independent quantum processors via optical links and quantum repeaters. Entanglement swapping protocols distribute coherent states over global baselines for distributed cloud computing and baseline telescope interferometry.',
-    lab: 'Circuit & Splitter Tabs',
-    hw: 'Quantum Memories / Frequency Converters',
-    cross: 'Communication & Computing',
+  optics: {
+    title: 'Stream 5: Quantum Optics & Photonics',
+    desc: 'Exploits the quantum nature of electromagnetic radiation, generating non-classical light states such as single photons, squeezed vacuum, and entangled photon pairs. Drives integrated optical circuits, quantum repeaters, and optical quantum logic gates.',
+    lab: 'Beam Splitter & Wavefunction Tabs',
+    hw: 'Integrated Photonics (SiN/LiNbO3) / SPADs / PPLN Waveguides',
+    cross: 'Computing, Cryptography & Sensing',
     color: 'var(--cyan)'
   }
 };
@@ -117,15 +117,15 @@ export default function StreamsTab() {
         </div>
 
         <div
-          className={`stream-node ${activeStream === 'net' ? 'active' : ''}`}
-          onClick={() => setActiveStream('net')}
+          className={`stream-node ${activeStream === 'optics' ? 'active' : ''}`}
+          onClick={() => setActiveStream('optics')}
         >
           <span className="stream-badge" style={{ background: '#ecfeff', color: 'var(--cyan)' }}>
             Stream 5
           </span>
-          <h3 style={{ marginTop: '8px' }}>Quantum Networks</h3>
+          <h3 style={{ marginTop: '8px' }}>Quantum Optics & Photonics</h3>
           <p className="muted" style={{ fontSize: '.82rem' }}>
-            Entanglement repeaters, quantum memory buffers.
+            Single photons, squeezed light, integrated photonic circuits.
           </p>
         </div>
       </div>
@@ -251,13 +251,16 @@ export default function StreamsTab() {
                 rx="8"
                 fill="#fff"
                 stroke="#0891b2"
-                strokeWidth={activeStream === 'net' ? '3.5' : '2'}
+                strokeWidth={activeStream === 'optics' ? '3.5' : '2'}
               />
-              <text x="75" y="32" textAnchor="middle" fontSize="12" fontWeight="800" fill="#0f172a">
-                5. Quantum Networks
+              <text x="75" y="30" textAnchor="middle" fontSize="11" fontWeight="800" fill="#0f172a">
+                5. Quantum Optics
               </text>
-              <text x="75" y="52" textAnchor="middle" fontSize="10" fill="#64748b">
-                Distributed Entanglement
+              <text x="75" y="46" textAnchor="middle" fontSize="11" fontWeight="800" fill="#0f172a">
+                & Photonics
+              </text>
+              <text x="75" y="62" textAnchor="middle" fontSize="9" fill="#64748b">
+                Integrated Optics & Lasers
               </text>
             </g>
           </g>
